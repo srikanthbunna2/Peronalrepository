@@ -1,0 +1,372 @@
+<p:monitoringProfile
+	xmlns:p="http://www.ibm.com/xmlns/prod/websphere/messagebroker/6.1.0.3/monitoring/profile" p:version="2.0">
+	<p:eventSource p:enabled="true" p:eventSourceAddress="HTTP Input.terminal.out">
+		<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="inbound" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'I'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+	<p:eventSource p:enabled="true" p:eventSourceAddress="HTTP Reply.terminal.in">
+		<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="outbound" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'O'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Body/Data/Header/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+	<p:eventSource p:enabled="true" p:eventSourceAddress="HTTP Input.terminal.catch">
+		<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="rollback" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'R'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+	<p:eventSource p:enabled="true" p:eventSourceAddress="HTTP Input.terminal.failure">
+		<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="failure" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'F'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+	<p:eventSource p:enabled="true" p:eventSourceAddress="HTTP Input.terminal.timeout">
+			<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="timeout" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'T'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Root/HTTPInputHeader/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+	<p:eventSource p:enabled="true" p:eventSourceAddress="postGenOtp (Implementation).Get_Dynamics_Data.terminal.in">
+		<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="intermediate" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'INTI'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+	<p:eventSource p:enabled="true" p:eventSourceAddress="postGenOtp (Implementation).Get_Dynamics_Data.terminal.out">
+		<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="intermediate" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'INTO'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+	<p:eventSource p:enabled="true" p:eventSourceAddress="postGenOtp (Implementation).Get_Dynamics_Data.terminal.error">
+		<p:eventPointDataQuery>
+			<p:eventIdentity>
+				<p:eventName p:literal="intermediate" p:queryText=""/>
+			</p:eventIdentity>
+			<p:eventCorrelation>
+				<p:localTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:parentTransactionId p:queryText="" p:sourceOfId="automatic"/>
+				<p:globalTransactionId p:queryText="" p:sourceOfId="automatic"/>
+			</p:eventCorrelation>
+			<p:eventUOW p:unitOfWork="messageFlow" />
+		</p:eventPointDataQuery>
+		<p:applicationDataQuery>
+			<p:simpleContent p:name="AuditType" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="'INTR'"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="MessageId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Messageid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CorrelationId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Correlationid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="CreatedTimestamp" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Createdtimestamp"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Serviceid"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SourceApplicationName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Sourceapplicationname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="ServiceName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Servicename"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadName" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Payloadname"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="PayloadKey" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Payloadkey"/>
+			</p:simpleContent>
+			<p:simpleContent p:name="SequenceId" p:dataType="string" p:targetNamespace="">
+				<p:valueQuery p:queryText="$Environment/Variable/Header/Sequenceid"/>
+			</p:simpleContent>
+		</p:applicationDataQuery>
+		<p:bitstreamDataQuery p:bitstreamContent="body" p:encoding="base64Binary"/>
+	</p:eventSource>
+</p:monitoringProfile>
+

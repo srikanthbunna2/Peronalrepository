@@ -1,0 +1,1 @@
+INSERT INTO "IHFL_ESB"."ESB_CONFIG" (ESB_CONFIG_ID, ESB_CONFIG_NAME, ESB_CONFIG_VALUE, FLOW_NAME, OPERATION) VALUES ('53', 'otpMessage', 'is your OTP (One Time Password). Please enter the same to continue with your application process.', 'gen.OTPGenerationService', 'OTPGenerateMessage')

@@ -1,0 +1,171 @@
+
+DECLARE flag BOOLEAN false;
+CREATE COMPUTE MODULE 	postGenOtp_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		  CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+	 	SET Environment.Variable.Header.Messageid = COALESCE(InputRoot.HTTPInputHeader.Messageid,InputRoot.JSON.Data.Header.MessageId, 'Unknown'||CAST(CURRENT_TIMESTAMP AS CHARACTER FORMAT 'ddMMMyyhhmmss'));
+        SET Environment.Variable.Header.Correlationid = COALESCE(InputRoot.HTTPInputHeader.Correlationid, InputRoot.JSON.Data.Header.Correlationid);
+        SET Environment.Variable.Header.Createdtimestamp = CURRENT_TIMESTAMP;
+        SET Environment.Variable.Header.Sequenceid = COALESCE(InputRoot.HTTPInputHeader.Sequenceid,InputRoot.JSON.Data.Header.Sequenceid);
+        SET Environment.Variable.Header.Sourceapplicationname = COALESCE(InputRoot.HTTPInputHeader.Sourceapplicationname, 'Unknown');
+        SET Environment.Variable.Header.Servicename = COALESCE(InputRoot.HTTPInputHeader.Servicename,InputRoot.JSON.Data.Header.Servicename);
+        SET Environment.Variable.Header.Payloadname = COALESCE(InputRoot.HTTPInputHeader.Payloadname,InputRoot.JSON.Data.Header.Payloadname);
+        SET Environment.Variable.Header.Payloadkey = COALESCE(InputRoot.HTTPInputHeader.Payloadkey,InputRoot.JSON.Data.Header.Payloadkey);
+		
+		SET OutputRoot.JSON.Data.mobileNumber = InputRoot.JSON.Data.mobile_number;
+		SET OutputRoot.Properties = InputRoot.Properties;
+		--Generating OTP:RY
+		DECLARE OTP_VALUE INT;
+	 	SET OTP_VALUE = 887654 * RAND() + 100000;
+		SET Environment.variables.rand1=OTP_VALUE;
+		--Generating OTP:RY
+		
+		--Checking Existing Mobilenumber For OTP
+		DECLARE OTP_EXIST INTEGER 0;
+	--	SET OTP_EXIST= select count(*) from Database.ESBAPP.IHFL_ESB.MOB_OTP where MOB_OTP.MOBILE_NUM=InputRoot.JSON.Data.mobile_number AND MOB_OTP.EMAIL= InputRoot.JSON.Data.email ;
+	  IF EXISTS(InputRoot.JSON.Data.mobile_number[])   THEN
+	  	SET OTP_EXIST= select count(*) from Database.ESBAPP.IHFL_ESB.MOB_OTP where MOB_OTP.MOBILE_NUM=InputRoot.JSON.Data.mobile_number;
+	  END IF;
+	  
+	  
+	  IF EXISTS(InputRoot.JSON.Data.email[]) THEN
+ 	   
+        SET OTP_EXIST= select count(*) from Database.ESBAPP.IHFL_ESB.MOB_OTP where MOB_OTP.EMAIL= InputRoot.JSON.Data.email; -- AND MOB_OTP.EMAIL= InputRoot.JSON.Data.email;
+ 	  END IF;
+         --Checking Existing Mobilenumber For OTP
+         
+        IF EXISTS(InputRoot.JSON.Data.mobile_number[]) AND EXISTS(InputRoot.JSON.Data.email[])   THEN
+	  	SET OTP_EXIST= select count(*) from Database.ESBAPP.IHFL_ESB.MOB_OTP where MOB_OTP.MOBILE_NUM=InputRoot.JSON.Data.mobile_number AND MOB_OTP.EMAIL= InputRoot.JSON.Data.email ;
+	  END IF; 
+         
+         
+         
+         
+      
+            IF EXISTS(InputRoot.JSON.Data.email[]) THEN 
+      	
+     
+        	IF OTP_EXIST = 0 THEN
+		insert into Database.ESBAPP.IHFL_ESB.MOB_OTP(OTP,NO_OF_ATTEMPTS,TIME_OTP,EMAIL) values(OTP_VALUE,0,CURRENT_TIMESTAMP,InputRoot.JSON.Data.email);	 
+		ELSE
+		BEGIN ATOMIC
+	  	UPDATE Database.ESBAPP.IHFL_ESB.MOB_OTP set NO_OF_ATTEMPTS=MOB_OTP.NO_OF_ATTEMPTS,DELETE_OTP='N',OTP=OTP_VALUE,TIME_OTP=CURRENT_TIMESTAMP where  MOB_OTP.EMAIL= InputRoot.JSON.Data.email;
+		commit;	
+		END;	
+		END IF;
+           --  END IF;
+	ELSE 
+          --   IF EXISTS(InputRoot.JSON.Data.mobile_number[])    THEN
+         	
+	   	IF OTP_EXIST = 0 THEN
+		insert into Database.ESBAPP.IHFL_ESB.MOB_OTP(MOBILE_NUM,OTP,NO_OF_ATTEMPTS,TIME_OTP) values(InputRoot.JSON.Data.mobile_number,OTP_VALUE,0,CURRENT_TIMESTAMP);--,InputRoot.JSON.Data.email);	 
+		ELSE
+		BEGIN ATOMIC
+	  	UPDATE Database.ESBAPP.IHFL_ESB.MOB_OTP set NO_OF_ATTEMPTS=MOB_OTP.NO_OF_ATTEMPTS,DELETE_OTP='N',OTP=OTP_VALUE,TIME_OTP=CURRENT_TIMESTAMP where MOB_OTP.MOBILE_NUM=InputRoot.JSON.Data.mobile_number; -- AND MOB_OTP.EMAIL= InputRoot.JSON.Data.email;
+		commit;	
+		END;	
+		END IF;
+               END IF;
+		
+        --   ELSE 
+          	
+         IF EXISTS(InputRoot.JSON.Data.mobile_number[]) AND EXISTS(InputRoot.JSON.Data.email[]) THEN
+         	
+         	
+       	IF OTP_EXIST = 0 THEN
+		insert into Database.ESBAPP.IHFL_ESB.MOB_OTP(MOBILE_NUM,OTP,NO_OF_ATTEMPTS,TIME_OTP,EMAIL) values(InputRoot.JSON.Data.mobile_number,OTP_VALUE,0,CURRENT_TIMESTAMP,InputRoot.JSON.Data.email);	 
+		ELSE
+		BEGIN ATOMIC
+	  	UPDATE Database.ESBAPP.IHFL_ESB.MOB_OTP set NO_OF_ATTEMPTS=MOB_OTP.NO_OF_ATTEMPTS,DELETE_OTP='N',OTP=OTP_VALUE,TIME_OTP=CURRENT_TIMESTAMP where MOB_OTP.MOBILE_NUM=InputRoot.JSON.Data.mobile_number AND MOB_OTP.EMAIL= InputRoot.JSON.Data.email;
+		commit;	
+		END;	
+		END IF;
+--         	
+		
+	 	 END IF;
+ 		-- END IF;
+		
+
+	 	 
+			
+	 	  DECLARE requestUrl ROW THE(SELECT E.ESB_CONFIG_VALUE FROM Database.ESBAPP.IHFL_ESB.ESB_CONFIG AS E WHERE E.ESB_CONFIG_NAME='ProviderURL12' AND E.OPERATION='postGenOtp' AND E.FLOW_NAME ='gen.OTPGenerationService');
+		SET OutputLocalEnvironment.Destination.HTTP.RequestURL=requestUrl.ESB_CONFIG_VALUE;
+
+
+       
+ 
+
+	      DECLARE OTPMessage ROW THE(SELECT E.ESB_CONFIG_VALUE FROM Database.ESBAPP.IHFL_ESB.ESB_CONFIG AS E WHERE E.ESB_CONFIG_NAME='otpMessage' AND E.OPERATION='OTPGenerateMessage' AND E.FLOW_NAME ='gen.OTPGenerationService');
+--	    SET message = 'is your OTP (One Time Password). Please enter the same to continue with your application process.';
+	  -- SET OutputRoot.JSON.Data.message = 'Your one time password is ' || CAST(OTP_VALUE AS CHARACTER) || ' Please enter the same to verify your mobile number.';
+	    IF EXISTS(InputRoot.JSON.Data.mobile_number[]) THEN 
+	    SET OutputRoot.JSON.Data.message =  CAST(OTP_VALUE AS CHARACTER) || OTPMessage.ESB_CONFIG_VALUE; 	
+		SET OutputRoot.JSON.Data.from ='ibulls';
+		SET OutputRoot.JSON.Data.smsType ='transactional';	
+		
+		PROPAGATE TO TERMINAL 'out';
+	  	END IF;
+		
+	 	IF EXISTS(InputRoot.JSON.Data.email[]) THEN  
+
+		SET OutputRoot.EmailOutputHeader.From = 'IHFL.ServiceDev@indiabulls.com' ;
+	 	SET OutputRoot.EmailOutputHeader.To = InputRoot.JSON.Data.email;
+ 		SET OutputLocalEnvironment.Destination.Email.BodyContentType = 'text/plain'; 
+ 	 -- SET OutputRoot.BLOB.BLOB = Environment.variables.rand1;
+  --	SET OutputRoot.BLOB.BLOB = CAST('Your one time password is <' || CAST(OTP_VALUE AS CHARACTER) || '> Please enter the same to verify your mobile number.' AS BLOB CCSID 1208); 
+	  SET OutputRoot.BLOB.BLOB = CAST( CAST(OTP_VALUE AS CHARACTER) ||OTPMessage.ESB_CONFIG_VALUE AS BLOB CCSID 1208); 	
+	     PROPAGATE TO TERMINAL 'out1';
+	      
+		 END IF;
+   		 DELETE FIELD OutputRoot.BLOB.BLOB; 
+   		 
+   		  DELETE FIELD  OutputRoot.EmailOutputHeader;
+   		 --  PROPAGATE TO TERMINAL 'out';
+            RETURN FALSE;
+		
+
+		--  RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
+
+
+
+
+CREATE COMPUTE MODULE postGenOtp_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
